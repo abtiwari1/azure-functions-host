@@ -73,6 +73,8 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost
                         loggingBuilder.Services.AddSingleton<ILoggerProvider, AzureMonitorDiagnosticLoggerProvider>();
                     }
 
+                    loggingBuilder.Services.AddSingleton<ILoggerProvider, ActionableEventLoggerProvider>();
+
                     ConfigureRegisteredBuilders(loggingBuilder, rootServiceProvider);
                 })
                 .ConfigureServices(services =>
