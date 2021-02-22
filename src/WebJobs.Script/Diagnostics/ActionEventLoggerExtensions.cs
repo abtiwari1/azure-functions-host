@@ -11,15 +11,16 @@ namespace Microsoft.Azure.WebJobs.Script.Diagnostics
 {
     public static class ActionEventLoggerExtensions
     {
-        public static void LogActionableEvent(this ILogger logger, LogLevel level, int errorCode, string message, string helpLink, Exception exception)
+        public static void LogActionableEvent(this ILogger logger, LogLevel level, int eventId, string errorCode, string message, string helpLink, Exception exception)
         {
             var stateDict = new Dictionary<string, object>
             {
                 { "actionableEvent", string.Empty },
-                { "helpLink", helpLink }
+                { "helpLink", helpLink },
+                { "errorCode", errorCode }
             };
 
-            logger.Log(level, errorCode, stateDict, exception, (state, ex) => message);
+            logger.Log(level, eventId, stateDict, exception, (state, ex) => message);
         }
     }
 }

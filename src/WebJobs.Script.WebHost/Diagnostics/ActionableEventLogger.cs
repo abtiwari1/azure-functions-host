@@ -11,6 +11,15 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost.Diagnostics
 {
     public class ActionableEventLogger : ILogger
     {
+        private const string ErrorCode = "errorCode";
+        private const string HelpLink = "helpLink";
+        private readonly IActionableEventRepository _actionableEventRepository;
+
+        public ActionableEventLogger(IActionableEventRepository actionableEventRepository)
+        {
+            _actionableEventRepository = actionableEventRepository;
+        }
+
         public IDisposable BeginScope<TState>(TState state)
         {
             return null;
@@ -21,20 +30,18 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost.Diagnostics
             return true;
         }
 
-        private bool IsActionableEvent<TState>(TState state)
+        private bool IsActionableEvent(IDictionary<string, object> state)
         {
-            return state is IDictionary<string, object> stateInfo
-                    && stateInfo.Keys.Contains("actionableEvent")
-                    && stateInfo.Keys.Contains("helpLink");
+            return state.Keys.Contains("actionableEvent") && state.Keys.Contains("helpLink");
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            if (IsActionableEvent(state))
+            if (state is IDictionary<string, object> stateInfo && IsActionableEvent(stateInfo))
             {
                 string message = formatter(state, exception);
                 Console.WriteLine($"Actionable Event:{message}");
-                // Log to repository
+                _actionableEventRepository.AddActionableEvent(DateTime.UtcNow, stateInfo[ErrorCode].ToString(), logLevel, message, stateInfo[HelpLink].ToString());
             }
         }
     }
