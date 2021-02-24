@@ -8,15 +8,15 @@ using Xunit;
 
 namespace Microsoft.Azure.WebJobs.Script.Tests.Diagnostics
 {
-    public class ActionableEventLoggerProviderTests
+    public class DiagnosticEventLoggerProviderTests
     {
         [Fact]
         public void IsActionableEvent_FiltersMessagesBasedonState()
         {
-            using (var provider = new ActionableEventLoggerProvider())
+            using (var provider = new DiagnosticEventLoggerProvider(new DiagnosticEventInMemoryRepository()))
             {
-                var logger = provider.CreateLogger("ActionableEvents");
-                logger.LogActionableEvent(LogLevel.Error, 123, "Actionable event occured", "https://fwlink", null);
+                var logger = provider.CreateLogger("DiagnosticEvents");
+                logger.LogDiagnosticEvent(LogLevel.Error, 123, "FN123", "Actionable event occured", "https://fwlink", null);
             }
         }
     }

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Azure.WebJobs.Script.WebHost.Diagnostics
 {
-    public class ActionableEvent
+    public class DiagnosticEvent
     {
         private int _hitCount = 0;
 

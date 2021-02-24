@@ -9,13 +9,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Azure.WebJobs.Script.Diagnostics
 {
-    public static class ActionEventLoggerExtensions
+    public static class DiagnosticEventLoggerExtensions
     {
-        public static void LogActionableEvent(this ILogger logger, LogLevel level, int eventId, string errorCode, string message, string helpLink, Exception exception)
+        public static void LogDiagnosticEvent(this ILogger logger, LogLevel level, int eventId, string errorCode, string message, string helpLink, Exception exception)
         {
             var stateDict = new Dictionary<string, object>
             {
-                { "actionableEvent", string.Empty },
+                { "diagnosticEvent", string.Empty },
                 { "helpLink", helpLink },
                 { "errorCode", errorCode }
             };

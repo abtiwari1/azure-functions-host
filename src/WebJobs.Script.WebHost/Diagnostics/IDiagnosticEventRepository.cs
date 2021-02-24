@@ -7,11 +7,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Azure.WebJobs.Script.WebHost.Diagnostics
 {
-    public interface IActionableEventRepository
+    public interface IDiagnosticEventRepository
     {
-        void AddActionableEvent(DateTime timestamp, string errorCode, LogLevel level, string message, string helpLink);
+        void AddDiagnosticEvent(DateTime timestamp, string errorCode, LogLevel level, string message, string helpLink);
 
-        IEnumerable<ActionableEvent> GetEvents();
+        IEnumerable<DiagnosticEvent> GetEvents();
 
         void FlushLogs();
     }

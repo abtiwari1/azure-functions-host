@@ -6,18 +6,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Azure.WebJobs.Script.WebHost.Diagnostics
 {
-    public class ActionableEventLoggerProvider : ILoggerProvider
+    public class DiagnosticEventLoggerProvider : ILoggerProvider
     {
-        private readonly IActionableEventRepository _actionableEventRepository;
+        private readonly IDiagnosticEventRepository _diagnosticEventRepository;
 
-        public ActionableEventLoggerProvider(IActionableEventRepository actionableEventRepository)
+        public DiagnosticEventLoggerProvider(IDiagnosticEventRepository diagnosticEventRepository)
         {
-            _actionableEventRepository = actionableEventRepository;
+            _diagnosticEventRepository = diagnosticEventRepository;
         }
 
         public ILogger CreateLogger(string categoryName)
         {
-            return new ActionableEventLogger(_actionableEventRepository);
+            return new DiagnosticEventLogger(_diagnosticEventRepository);
         }
 
         public void Dispose()

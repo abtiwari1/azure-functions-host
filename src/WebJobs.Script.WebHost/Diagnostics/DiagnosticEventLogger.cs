@@ -9,15 +9,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Azure.WebJobs.Script.WebHost.Diagnostics
 {
-    public class ActionableEventLogger : ILogger
+    public class DiagnosticEventLogger : ILogger
     {
         private const string ErrorCode = "errorCode";
         private const string HelpLink = "helpLink";
-        private readonly IActionableEventRepository _actionableEventRepository;
+        private readonly IDiagnosticEventRepository _diagnosticEventRepository;
 
-        public ActionableEventLogger(IActionableEventRepository actionableEventRepository)
+        public DiagnosticEventLogger(IDiagnosticEventRepository actionableEventRepository)
         {
-            _actionableEventRepository = actionableEventRepository;
+            _diagnosticEventRepository = actionableEventRepository;
         }
 
         public IDisposable BeginScope<TState>(TState state)
@@ -30,18 +30,17 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost.Diagnostics
             return true;
         }
 
-        private bool IsActionableEvent(IDictionary<string, object> state)
+        private bool IsDiagnosticEvent(IDictionary<string, object> state)
         {
-            return state.Keys.Contains("actionableEvent") && state.Keys.Contains("helpLink");
+            return state.Keys.Contains("diagnosticEvent") && state.Keys.Contains("helpLink");
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            if (state is IDictionary<string, object> stateInfo && IsActionableEvent(stateInfo))
+            if (state is IDictionary<string, object> stateInfo && IsDiagnosticEvent(stateInfo))
             {
                 string message = formatter(state, exception);
-                Console.WriteLine($"Actionable Event:{message}");
-                _actionableEventRepository.AddActionableEvent(DateTime.UtcNow, stateInfo[ErrorCode].ToString(), logLevel, message, stateInfo[HelpLink].ToString());
+                _diagnosticEventRepository.AddDiagnosticEvent(DateTime.UtcNow, stateInfo[ErrorCode].ToString(), logLevel, message, stateInfo[HelpLink].ToString());
             }
         }
     }

@@ -10,12 +10,12 @@ using Timer = System.Timers.Timer;
 
 namespace Microsoft.Azure.WebJobs.Script.WebHost.Diagnostics
 {
-    public class ActionableEventInMemoryRepository : IActionableEventRepository
+    public class DiagnosticEventInMemoryRepository : IDiagnosticEventRepository
     {
-        private readonly ConcurrentDictionary<string, ActionableEvent> _events = new ConcurrentDictionary<string, ActionableEvent>();
+        private readonly ConcurrentDictionary<string, DiagnosticEvent> _events = new ConcurrentDictionary<string, DiagnosticEvent>();
         private readonly Timer _resetTimer;
 
-        public ActionableEventInMemoryRepository()
+        public DiagnosticEventInMemoryRepository()
         {
             _resetTimer = new Timer()
             {
@@ -32,9 +32,9 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost.Diagnostics
             FlushLogs();
         }
 
-        public void AddActionableEvent(DateTime timestamp, string errorCode, LogLevel level, string message, string helpLink)
+        public void AddDiagnosticEvent(DateTime timestamp, string errorCode, LogLevel level, string message, string helpLink)
         {
-            var actionableEvent = new ActionableEvent()
+            var diagnosticEvent = new DiagnosticEvent()
             {
                 ErrorCode = errorCode,
                 HelpLink = helpLink,
@@ -43,7 +43,7 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost.Diagnostics
                 Level = level
             };
 
-            _events.AddOrUpdate(errorCode, actionableEvent, (e, a) =>
+            _events.AddOrUpdate(errorCode, diagnosticEvent, (e, a) =>
             {
                 a.IncrementHitCount();
                 a.LastOccuredTimeStamp = timestamp;
@@ -51,7 +51,7 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost.Diagnostics
             });
         }
 
-        public IEnumerable<ActionableEvent> GetEvents()
+        public IEnumerable<DiagnosticEvent> GetEvents()
         {
             return _events.Values;
         }

@@ -73,7 +73,7 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost
                         loggingBuilder.Services.AddSingleton<ILoggerProvider, AzureMonitorDiagnosticLoggerProvider>();
                     }
 
-                    loggingBuilder.Services.AddSingleton<ILoggerProvider, ActionableEventLoggerProvider>();
+                    loggingBuilder.Services.AddSingleton<ILoggerProvider, DiagnosticEventLoggerProvider>();
 
                     ConfigureRegisteredBuilders(loggingBuilder, rootServiceProvider);
                 })
@@ -111,7 +111,7 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost
                         services.TryAddEnumerable(ServiceDescriptor.Singleton<IJobHostHttpMiddleware, JobHostCorsMiddleware>());
                     }
                     services.TryAddSingleton<IScaleMetricsRepository, TableStorageScaleMetricsRepository>();
-                    services.TryAddSingleton<IActionableEventRepository, ActionableEventInMemoryRepository>();
+                    services.TryAddSingleton<IDiagnosticEventRepository, DiagnosticEventInMemoryRepository>();
 
                     if (environment.IsWindowsAzureManagedHosting() || environment.IsLinuxAzureManagedHosting())
                     {

@@ -62,9 +62,9 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost.Controllers
         [HttpGet]
         [Route("admin/host/Errors")]
         [Authorize(Policy = PolicyNames.AdminAuthLevelOrInternal)]
-        public IActionResult GetActionableEvents([FromServices] IActionableEventRepository actionableEventRepository)
+        public IActionResult GetDiagnosticEvents([FromServices] IDiagnosticEventRepository diagnosticEventRepository)
         {
-            IEnumerable<ActionableEvent> events = actionableEventRepository.GetEvents();
+            IEnumerable<DiagnosticEvent> events = diagnosticEventRepository.GetEvents();
             return Ok(events);
         }
 
